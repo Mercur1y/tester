@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  postgres-db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: stest
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  rabbitmq:
+    image: rabbitmq:3.12.2-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
