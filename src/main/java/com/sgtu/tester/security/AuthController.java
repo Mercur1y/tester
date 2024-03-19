@@ -1,4 +1,4 @@
-package com.sgtu.tester.controller;
+package com.sgtu.tester.security;
 
 import com.sgtu.tester.security.JwtUtils;
 import com.sgtu.tester.security.model.ERole;
