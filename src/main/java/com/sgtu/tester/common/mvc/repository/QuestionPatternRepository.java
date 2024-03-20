@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface QuestionPatternRepository extends JpaRepository<QuestionPattern, Long> {
-    List<QuestionPattern> findByIsTextTrue();
-    List<QuestionPattern> findByIsTextFalse();
+    List<QuestionPattern> findByTypeId(Integer typeId);
 }

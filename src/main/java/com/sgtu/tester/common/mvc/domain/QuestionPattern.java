@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +22,7 @@ public class QuestionPattern {
     @GeneratedValue
     private Long id;
 
-    private boolean isText;
+    private Integer typeId;
 
     @Lob
     private String formula;
@@ -31,7 +33,8 @@ public class QuestionPattern {
     @ElementCollection
     private HashMap<String, Integer> options;
 
-    private String correctAnswer;
+    @OneToMany(mappedBy = "questionPattern", cascade = CascadeType.ALL)
+    private List<VariableInfo> variables;
 
     @ManyToMany(mappedBy = "questions")
     private Set<TestPattern> testPatterns = new HashSet<>();
