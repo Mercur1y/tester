@@ -1,7 +1,11 @@
 import React, { Component } from "react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import logoImage from './assets/logo.png';
+import { CustomSidebar } from "./components/global/nav.sidebar";
+import CommonForm from "./components/auth/common-form.component";
+import Topbar from "./components/global/nav.topbar";
 
 import AuthService from "./services/auth/auth.service";
 
@@ -52,10 +56,14 @@ class App extends Component {
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
 
     return (
-      <div>
-        <nav className="navbar navbar-expand navbar-dark bg-dark">
+        <div className="app">
+          {currentUser && <CustomSidebar />}
+        
+        <main className="content">
+        {currentUser && 
+        <nav className="navbar navbar-expand" style={{ backgroundColor: '#edf7fa' }}>
           <Link to={"/"} className="navbar-brand">
-            bezKoder
+            <img src={logoImage} alt="Логотип" className="nav-logo-image"/>
           </Link>
           <div className="navbar-nav mr-auto">
             <li className="nav-item">
@@ -118,9 +126,9 @@ class App extends Component {
             </div>
           )}
         </nav>
-
-        <div className="container mt-3">
+        }
           <Routes>
+            <Route path="/" element={currentUser ? <Navigate to="/home" /> : <CommonForm />} />
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -130,8 +138,8 @@ class App extends Component {
             <Route path="/mod" element={<BoardModerator />} />
             <Route path="/admin" element={<BoardAdmin />} />
           </Routes>
+          </main>
         </div>
-      </div>
     );
   }
 }
