@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { CSSTransition } from 'react-transition-group';
 import { Container, Box, Typography, Button } from "@mui/material";
 import { DiGithubBadge } from "react-icons/di";
 import styled from "@emotion/styled";
@@ -7,6 +6,7 @@ import SignInForm from "./login.component";
 import SignUpForm from "./register.component";
 import Logo from "../../assets/logo-text.png";
 import Background from "../../assets/auth_background.jpg";
+import { withRouter } from '../../common/with-router';
 
 import "../../style/auth-style.css";
 
@@ -131,4 +131,4 @@ const CommonForm = () => {
     );
   };
   
-  export default CommonForm;
+  export default withRouter(CommonForm);
