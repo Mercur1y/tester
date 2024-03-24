@@ -1,41 +1,31 @@
-import React, { Component } from "react";
-
+import React, { useState, useEffect } from "react";
 import UserService from "../services/auth/user.service";
 
-export default class Home extends Component {
-  constructor(props) {
-    super(props);
+function Home() {
+  const [content, setContent] = useState("");
 
-    this.state = {
-      content: ""
-    };
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     UserService.getPublicContent().then(
       response => {
-        this.setState({
-          content: response.data
-        });
+        setContent(response.data);
       },
       error => {
-        this.setState({
-          content:
-            (error.response && error.response.data) ||
-            error.message ||
-            error.toString()
-        });
+        setContent(
+          (error.response && error.response.data) ||
+          error.message ||
+          error.toString()
+        );
       }
     );
-  }
+  }, []); // Пустой массив зависимостей означает, что эффект будет вызываться только при монтировании компонента
 
-  render() {
-    return (
-      <div className="container">
-        <header className="jumbotron">
-          <h3>{this.state.content}</h3>
-        </header>
-      </div>
-    );
-  }
+  return (
+    <div className="container">
+      <header className="jumbotron">
+        <h3>{content}</h3>
+      </header>
+    </div>
+  );
 }
+
+export default Home;

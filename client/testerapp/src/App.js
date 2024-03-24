@@ -8,9 +8,6 @@ import CommonForm from "./components/auth/common-form.component";
 import Topbar from "./components/global/nav.topbar";
 
 import AuthService from "./services/auth/auth.service";
-
-import Login from "./components/auth/login.component";
-import Register from "./components/auth/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/auth/profile.component";
 import BoardUser from "./components/board-user.component";
@@ -19,41 +16,41 @@ import BoardAdmin from "./components/board-admin.component";
 
 // import AuthVerify from "./common/AuthVerify";
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.logOut = this.logOut.bind(this);
+class App extends Component {  constructor(props) {
+  super(props);
+  this.logOut = this.logOut.bind(this);
 
-    this.state = {
-      showModeratorBoard: false,
-      showAdminBoard: false,
-      currentUser: undefined,
-    };
-  }
+  this.state = {
+    showModeratorBoard: false,
+    showAdminBoard: false,
+    currentUser: undefined,
+  };
+}
 
-  componentDidMount() {
-    const user = AuthService.getCurrentUser();
+componentDidMount() {
+  const user = AuthService.getCurrentUser();
 
-    if (user) {
-      this.setState({
-        currentUser: user,
-        showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-        showAdminBoard: user.roles.includes("ROLE_ADMIN"),
-      });
-    }
-  }
-
-  logOut() {
-    AuthService.logout();
+  if (user) {
     this.setState({
-      showModeratorBoard: false,
-      showAdminBoard: false,
-      currentUser: undefined,
+      currentUser: user,
+      showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
+      showAdminBoard: user.roles.includes("ROLE_ADMIN"),
     });
-  }
+}
+}
+
+logOut() {
+  AuthService.logout();
+  this.setState({
+    showModeratorBoard: false,
+    showAdminBoard: false,
+    currentUser: undefined,
+  });
+  return <Navigate to="/" />;
+}
 
   render() {
-    const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
+    const { currentUser, showModeratorBoard, showAdminBoard, loading } = this.state;
 
     return (
         <div className="app">
@@ -96,8 +93,6 @@ class App extends Component {
               </li>
             )}
           </div>
-
-          {currentUser ? (
             <div className="navbar-nav ml-auto">
               <li className="nav-item">
                 <Link to={"/profile"} className="nav-link">
@@ -105,34 +100,16 @@ class App extends Component {
                 </Link>
               </li>
               <li className="nav-item">
-                <a href="/login" className="nav-link" onClick={this.logOut}>
+                <a href="/" className="nav-link" onClick={this.logOut}>
                   LogOut
                 </a>
               </li>
             </div>
-          ) : (
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/login"} className="nav-link">
-                  Login
-                </Link>
-              </li>
-
-              <li className="nav-item">
-                <Link to={"/register"} className="nav-link">
-                  Sign Up
-                </Link>
-              </li>
-            </div>
-          )}
         </nav>
         }
           <Routes>
-            <Route path="/" element={currentUser ? <Navigate to="/home" /> : <CommonForm />} />
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<CommonForm />}/>
+            {currentUser && <Route path="/home" element={<Home />} />}
             <Route path="/profile" element={<Profile />} />
             <Route path="/user" element={<BoardUser />} />
             <Route path="/mod" element={<BoardModerator />} />

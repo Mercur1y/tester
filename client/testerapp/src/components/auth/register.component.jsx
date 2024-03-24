@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { CSSTransition } from 'react-transition-group';
-import { TextField, Button, Autocomplete, Box } from "@mui/material";
+import { TextField, Button, Autocomplete, Box, CircularProgress, Alert } from "@mui/material";
 import styled from "@emotion/styled";
 import { PiUserCirclePlusThin } from "react-icons/pi";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { withRouter } from '../../common/with-router';
 
 import AuthService from "../../services/auth/auth.service";
 
@@ -33,6 +32,7 @@ const Line = styled.div`
 const Register = ({setConfirmContent, setCurrentEmail}) => {
     const [showAdditionalFields, setShowAdditionalFields] = useState(false);
     const [message, setMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
   const initialValuesBasic = {
     username: "",
@@ -42,7 +42,7 @@ const Register = ({setConfirmContent, setCurrentEmail}) => {
 
   const initialValuesAdditional = {
     name: "",
-    lastName: "",
+    surname: "",
     role: "",
   };
 
@@ -54,47 +54,54 @@ const Register = ({setConfirmContent, setCurrentEmail}) => {
 
   const validationSchemaAdditional = Yup.object().shape({
     name: Yup.string().required("Введите имя"),
-    lastName: Yup.string().required("Введите фамилию"),
+    surname: Yup.string().required("Введите фамилию"),
     role: Yup.string().required("Выбор роли обязателен"),
   });
 
   const formikBasic = useFormik({
     initialValues: initialValuesBasic,
     validationSchema: validationSchemaBasic,
-    onSubmit: () => {
-        setShowAdditionalFields(false);
-  }
+    onSubmit: async () => {
+      const isValid = await formikBasic.validateForm();
+      if (isValid) {
+        setShowAdditionalFields(true);
+      }
+    }
   });
 
   const formikAdditional = useFormik({
     initialValues: initialValuesAdditional,
     validationSchema: validationSchemaAdditional,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const { username, email, password } = formikBasic.values;
-      const { name, lastName, role} = values;
+      const { name, surname, role } = values;
       setMessage("");
-        AuthService.register(username, email, password, name, lastName, role)
-          .then(() => {
-            setTimeout(() => {
-              formikBasic.resetForm();
-              formikAdditional.resetForm();
-              setShowAdditionalFields(false);
-              setCurrentEmail(email);
-              setConfirmContent(true);
-            }, 2000);
-          })
-          .catch(error => {
-            const errorMessage =
-              (error.response && error.response.data && error.response.data.message) ||
-              error.message ||
-              error.toString();
-            setMessage(errorMessage);
-          });
+      setIsLoading(true);
+  
+      try {
+        await AuthService.register(username, email, password, name, surname, role);
+        setTimeout(() => {
+          formikBasic.resetForm();
+          formikAdditional.resetForm();
+          setShowAdditionalFields(false);
+          setCurrentEmail(email);
+          setConfirmContent(true);
+        }, 2000);
+      } catch (error) {
+        const errorMessage =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setMessage(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
     }
   });
+  
 
   const handleBack = () => {
-    setShowAdditionalFields(false); // Обнуляем сохраненные значения
+    setShowAdditionalFields(false);
   };
 
   return (
@@ -210,14 +217,14 @@ const Register = ({setConfirmContent, setCurrentEmail}) => {
             <TextField
               margin="normal"
               fullWidth
-              id="lastName"
-              name="lastName"
+              id="surname"
+              name="surname"
               label="Фамилия"
               InputLabelProps={{ shrink: true }}
-              value={formikAdditional.values.lastName}
+              value={formikAdditional.values.surname}
               onChange={formikAdditional.handleChange}
-              error={formikAdditional.touched.lastName && Boolean(formikAdditional.errors.lastName)}
-              helperText={formikAdditional.touched.lastName && formikAdditional.errors.lastName}
+              error={formikAdditional.touched.surname && Boolean(formikAdditional.errors.surname)}
+              helperText={formikAdditional.touched.surname && formikAdditional.errors.surname}
               color="info"
             />
             <Autocomplete
@@ -255,15 +262,52 @@ const Register = ({setConfirmContent, setCurrentEmail}) => {
                 type="submit"
                 variant="contained"
                 size="large"
-                sx={{ borderRadius: 2, backgroundColor: "#1cacdc"}}
+                sx={{
+                  borderRadius: 2,
+                  backgroundColor: "#1cacdc",
+                  "&:disabled": {
+                    cursor: "not-allowed",
+                    pointerEvents: "auto",
+                    position: "relative",
+                    "&::after": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      background: "rgba(0, 0, 0, 0.04)",
+                      borderRadius: "inherit",
+                      animation: "$spin 1s linear infinite",
+                    },
+                  },
+                  "@keyframes spin": {
+                    "0%": {
+                      transform: "rotate(0deg)",
+                    },
+                    "100%": {
+                      transform: "rotate(360deg)",
+                    },
+                  },
+                }}
+                disabled={isLoading}
               >
-                Зарегистрироваться
+                {isLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  'Зарегистрироваться'
+                )}
               </Button>
           </Box>
+          {message && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {message}
+            </Alert>
+          )}
           </Box>
           </CSSTransition>
       </Box>
   );
 }
 
-export default withRouter(Register);
+export default Register;

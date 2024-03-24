@@ -3,11 +3,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { PiUserCircleThin } from "react-icons/pi";
-import { TextField, Button, Typography, Link, Box, Alert } from "@mui/material";
+import { TextField, Button, Link, Box, Alert } from "@mui/material";
+import LoadingButton from '@mui/lab/LoadingButton';
 import styled from "@emotion/styled";
 
 import AuthService from "../../services/auth/auth.service";
-import { withRouter } from '../../common/with-router';
 
 const IconDiv = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ const Login = () => {
     
         AuthService.login(values.username, values.password)
           .then(() => {
-            navigate("/profile");
+            navigate("/home");
             window.location.reload();
           })
           .catch((error) => {
@@ -113,14 +113,15 @@ const Login = () => {
           <Link href="#" variant="body2">
             Забыли пароль?
           </Link>
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
             size="large"
             sx={{ mt: 4, mb: 2, borderRadius: 2, backgroundColor: "#1cacdc" }}
+            loading={loading}
           >
             Войти
-          </Button>
+          </LoadingButton>
           {message && (
             <Alert severity="error" sx={{ mt: 2 }}>
               {message}
@@ -131,4 +132,4 @@ const Login = () => {
   );
 }
 
-export default withRouter(Login);
+export default Login;
