@@ -27,7 +27,7 @@ public abstract class DefaultController<E, S extends DefaultService<E, ? extends
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<E> getById(@PathVariable Long id) {
+    public ResponseEntity<E> getById(@RequestBody Long id) {
         Optional<E> entity = service.findById(id);
         return entity.map(ResponseEntity::ok)
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -40,7 +40,7 @@ public abstract class DefaultController<E, S extends DefaultService<E, ? extends
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@RequestBody Long id) {
         service.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -8,6 +8,7 @@ import com.sgtu.tester.dto.QuestionJsonContentDto;
 import com.sgtu.tester.dto.TestJsonContentDto;
 import com.sgtu.tester.util.DtoConverterUtil;
 import com.sgtu.tester.util.JsonConverter;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+@Service
 public class TestCreationProcessingService {
 
     public String getContent(TestPattern testPattern) throws JsonProcessingException {
