@@ -1,12 +1,15 @@
 package com.sgtu.tester.common.mvc.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
@@ -23,13 +26,13 @@ public class TestInfo {
 
     private Integer rate;
 
-    private Calendar createDate;
+    private LocalDateTime createDate;
 
-    private Calendar deadline;
+    private LocalDateTime deadline;
 
     private boolean isFinished;
 
-    private Long categoryId;
+    private Long sectionId;
 
     private Long userId;
 }

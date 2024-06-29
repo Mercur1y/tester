@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,9 +22,9 @@ public class TestPattern {
 
     private String name;
 
-    private Calendar createDate;
+    private LocalDateTime createDate;
 
-    private Calendar updateDate;
+    private LocalDateTime updateDate;
 
     @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "test_questions",
@@ -33,7 +33,14 @@ public class TestPattern {
     )
     private Set<QuestionPattern> questions = new HashSet<>();
 
-    private Long categoryId;
+    @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "test_formulas",
+            joinColumns = @JoinColumn(name = "test_id"),
+            inverseJoinColumns = @JoinColumn(name = "formula_id")
+    )
+    private Set<FormulaPattern> formulas = new HashSet<>();
+
+    private Long sectionId;
 
     private Long userId;
 }

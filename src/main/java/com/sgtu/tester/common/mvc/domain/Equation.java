@@ -22,8 +22,10 @@ public class Equation {
     private String sampleSolution;
 
     private String guid;
+    
+    private Long categoryId;
+    
+    private Long sectionId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Long userId;
 }
