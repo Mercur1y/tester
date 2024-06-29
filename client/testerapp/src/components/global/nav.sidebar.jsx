@@ -1,10 +1,11 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import { Sidebar, Menu, MenuItem, SubMenu, menuClasses, MenuItemStyles } from 'react-pro-sidebar';
-import { SidebarHeader } from './sidebar_elements/sidebar.header';
+import { SidebarHeader } from '../elements/sidebar.header';
 import { Box } from '@mui/system';
 import { BarChart, Language, Create, MenuBook, Event, ShoppingCart, Build } from '@mui/icons-material';
 import { Typography } from '@mui/material';
-import { Badge } from './sidebar_elements/sidebar.badge';
+import { Badge } from '../elements/sidebar.badge';
 
 const themes = {
   light: {
@@ -174,7 +175,13 @@ export const CustomSidebar = () => {
               <MenuItem icon={<Event />} suffix={<Badge variant="success">New</Badge>}>
                 Calendar
               </MenuItem>
-              <MenuItem icon={<MenuBook />}>Documentation</MenuItem>
+              <MenuItem icon={<MenuBook />}>
+              <Link to="/formulas" style={{ textDecoration: 'none', color: 'inherit', display: 'contents' }}>
+                <span className="MuiTypography-root MuiTypography-body1 MuiTypography-displayBlock">
+                  Documentation
+                </span>
+              </Link>
+              </MenuItem>
               <MenuItem disabled icon={<BarChart />}>
                 Examples
               </MenuItem>

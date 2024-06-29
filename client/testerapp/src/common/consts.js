@@ -1,0 +1,81 @@
+export const sections = {
+    '1': {
+      name: 'Алгебра',
+      subsections: {
+        '11': 'Группировать подобные члены',
+        '12': 'Найти переменную',
+        '13': 'Множитель',
+        '14': 'Разложить',
+        '15': 'Вычисления с дробями',
+        '16': 'Линейные уравнения',
+        '17': 'Квадратные уравнения',
+        '18': 'Неравенства',
+        '19': 'Системы уравнений',
+        '110': 'Матрицы',
+      }
+    },
+    '2': {
+      name: 'Тригонометрия',
+      subsections: {
+        '21': 'Сократить уравнение',
+        '22': 'Найти численное значение',
+        '23': 'Графики',
+        '24': 'Решить уравнения',
+      }
+    },
+    '3': {
+      name: 'Математический анализ',
+      subsections: {
+        '31': 'Производные',
+        '32': 'Интегралы',
+        '33': 'Пределы функции',
+      }
+    }
+};
+
+export const localeGridText = {
+    toolbarColumns: 'Управление столбцами',
+    toolbarFilters: 'Фильтры',
+    toolbarDensity: 'Плотность',
+    toolbarExport: 'Экспорт',
+    columnsPanelTextFieldLabel: 'Найти столбец',
+    columnsPanelTextFieldPlaceholder: 'Название столбца',
+    columnsPanelDragIconLabel: 'Перетащите столбец',
+    columnsPanelShowAllButton: 'Показать все',
+    columnsPanelHideAllButton: 'Скрыть все',
+    filterPanelAddFilter: 'Добавить фильтр',
+    filterPanelDeleteIconLabel: 'Удалить',
+    filterPanelLinkOperator: 'Логический оператор',
+    filterPanelOperators: 'Операторы',
+    filterPanelOperatorAnd: 'И',
+    filterPanelOperatorOr: 'ИЛИ',
+    filterPanelColumns: 'Столбцы',
+    filterPanelInputLabel: 'Значение',
+    filterPanelInputPlaceholder: 'Значение фильтра',
+    filterOperatorContains: 'содержит',
+    filterOperatorEquals: 'равно',
+    filterOperatorStartsWith: 'начинается с',
+    filterOperatorEndsWith: 'заканчивается на',
+    filterOperatorIs: 'является',
+    filterOperatorNot: 'не является',
+    filterOperatorAfter: 'после',
+    filterOperatorOnOrAfter: 'не ранее',
+    filterOperatorBefore: 'до',
+    filterOperatorOnOrBefore: 'не позднее',
+    filterOperatorIsEmpty: 'пусто',
+    filterOperatorIsNotEmpty: 'не пусто',
+    filterOperatorIsAnyOf: 'любой из',
+    columnMenuLabel: 'Меню',
+    columnMenuShowColumns: 'Показать столбцы',
+    columnMenuFilter: 'Фильтр',
+    columnMenuHideColumn: 'Скрыть',
+    columnMenuUnsort: 'Убрать сортировку',
+    columnMenuSortAsc: 'Сортировать по возрастанию',
+    columnMenuSortDesc: 'Сортировать по убыванию',
+    columnHeaderFiltersTooltipActive: count => `${count} активных фильтров`,
+    columnHeaderFiltersLabel: 'Показать фильтры',
+    columnHeaderSortIconLabel: 'Сортировать',
+    footerRowSelected: count => `${count.toLocaleString()} строк выбрано`,
+    footerTotalRows: 'Всего строк:',
+    footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
+};

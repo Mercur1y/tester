@@ -37,3 +37,7 @@ label {
   -webkit-border-radius: 50%;
   border-radius: 50%;
 }
+
+.latex-formula {
+  font-size: 2em;
+}

@@ -1,124 +1,84 @@
-import React, { Component } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import logoImage from './assets/logo.png';
 import { CustomSidebar } from "./components/global/nav.sidebar";
-import CommonForm from "./components/auth/common-form.component";
 import Topbar from "./components/global/nav.topbar";
-
 import AuthService from "./services/auth/auth.service";
 import Home from "./components/home.component";
+import FormulasGrid from "./components/grid.formilas.component";
+import FormulasForm from './components/form.formulas.component';
 import Profile from "./components/auth/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
+import CommonForm from "./components/auth/common-form.component";
+import { montserrat } from '@fontsource/montserrat';
+import { ThemeProvider } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles';
 
 // import AuthVerify from "./common/AuthVerify";
 
-class App extends Component {  constructor(props) {
-  super(props);
-  this.logOut = this.logOut.bind(this);
+const App = () => {
+  const [currentUser, setCurrentUser] = useState(null);
+  const location = useLocation();
+  const [currentTitle, setCurrentTitle] = useState('');
 
-  this.state = {
-    showModeratorBoard: false,
-    showAdminBoard: false,
-    currentUser: undefined,
+  useEffect(() => {
+    const user = AuthService.getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Найти маршрут с текущим путем и получить его title
+    const matchedRoute = routes.find(route => route.path === location.pathname);
+    if (matchedRoute) {
+      setCurrentTitle(matchedRoute.title);
+    } else {
+      setCurrentTitle('');
+    }
+  }, [location]);
+
+  const logOut = () => {
+    AuthService.logout();
+    setCurrentUser(null);
+    window.location.href = '/';
   };
-}
 
-componentDidMount() {
-  const user = AuthService.getCurrentUser();
-
-  if (user) {
-    this.setState({
-      currentUser: user,
-      showModeratorBoard: user.roles.includes("ROLE_MODERATOR"),
-      showAdminBoard: user.roles.includes("ROLE_ADMIN"),
-    });
-}
-}
-
-logOut() {
-  AuthService.logout();
-  this.setState({
-    showModeratorBoard: false,
-    showAdminBoard: false,
-    currentUser: undefined,
+  const theme = createTheme({
+    typography: {
+      fontFamily: 'Montserrat, sans-serif',
+    },
   });
-  return <Navigate to="/" />;
-}
 
-  render() {
-    const { currentUser, showModeratorBoard, showAdminBoard, loading } = this.state;
+  const routes = [
+    { path: "/", element: <CommonForm/> },
+    { path: "/home", element: <Home />, title: "Home" },
+    { path: "/profile", element: <Profile />, title: "Profile" },
+    { path: "/user", element: <BoardUser />, title: "User Board" },
+    { path: "/mod", element: <BoardModerator />, title: "Moderator Board" },
+    { path: "/admin", element: <BoardAdmin />, title: "Admin Board" },
+    { path: "/formulas", element: <FormulasGrid />, title: "Formulas" },
+    { path: "/formulas/new", element: <FormulasForm />, title: "Formulas" },
+  ];
 
-    return (
-        <div className="app">
-          {currentUser && <CustomSidebar />}
-        
-        <main className="content">
-        {currentUser && 
-        <nav className="navbar navbar-expand" style={{ backgroundColor: '#edf7fa' }}>
-          <Link to={"/"} className="navbar-brand">
-            <img src={logoImage} alt="Логотип" className="nav-logo-image"/>
-          </Link>
-          <div className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/home"} className="nav-link">
-                Home
-              </Link>
-            </li>
-
-            {showModeratorBoard && (
-              <li className="nav-item">
-                <Link to={"/mod"} className="nav-link">
-                  Moderator Board
-                </Link>
-              </li>
-            )}
-
-            {showAdminBoard && (
-              <li className="nav-item">
-                <Link to={"/admin"} className="nav-link">
-                  Admin Board
-                </Link>
-              </li>
-            )}
-
-            {currentUser && (
-              <li className="nav-item">
-                <Link to={"/user"} className="nav-link">
-                  User
-                </Link>
-              </li>
-            )}
-          </div>
-            <div className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to={"/profile"} className="nav-link">
-                  {currentUser.username}
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a href="/" className="nav-link" onClick={this.logOut}>
-                  LogOut
-                </a>
-              </li>
-            </div>
-        </nav>
-        }
-          <Routes>
-            <Route path="/" element={<CommonForm />}/>
-            {currentUser && <Route path="/home" element={<Home />} />}
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/user" element={<BoardUser />} />
-            <Route path="/mod" element={<BoardModerator />} />
-            <Route path="/admin" element={<BoardAdmin />} />
-          </Routes>
-          </main>
-        </div>
-    );
-  }
-}
+  return (
+    <ThemeProvider theme={theme}>
+    <div className="app">
+      {currentUser && <CustomSidebar />}
+      <main className="content">
+        {currentUser && <Topbar currentUser={currentUser} logOut={logOut} currentTitle={currentTitle} />}
+        <Routes>
+          {routes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </main>
+    </div>
+    </ThemeProvider>
+  );
+};
 
 export default App;

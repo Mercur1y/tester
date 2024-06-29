@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import { Typography } from '@mui/material';
-import LogoIcon from '../../../assets/logo-icon.png';
-import LogoText from '../../../assets/logo-text.png';
+import LogoIcon from '../../assets/logo-icon.png';
+import LogoText from '../../assets/logo-text.png';
 
 const StyledSidebarHeader = styled.div`
   height: 64px;
