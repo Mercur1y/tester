@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, InputLabel, Select, MenuItem, Alert, Box } from '@mui/material';
+import {Button, InputLabel, Select, MenuItem, Alert, Box, TextField} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { withRouter } from "../common/with-router";
 import { ContentDiv, HalfContentBox } from "./global/mui.styles";
@@ -138,22 +138,39 @@ const FormulasForm = () => {
         <ContentDiv>
             <HalfContentBox>
                 <Box ref={mathfieldRef} style={{ width: '100%', marginBottom: '20px' }}></Box>
-                <Box>
-                    <InputLabel>Раздел</InputLabel>
-                    <Select value={divisionId} onChange={(e) => setDivisionId(e.target.value)}>
-                        {Object.keys(sections).map((divisionId) => (
-                            <MenuItem key={divisionId} value={divisionId}>{sections[divisionId].name}</MenuItem>
+                <TextField
+                    select
+                    fullWidth
+                    label="Раздел"
+                    value={divisionId}
+                    onChange={(e) => {
+                        setDivisionId(e.target.value);
+                        setSectionId(''); // сбросить выбранную секцию при смене раздела
+                    }}
+                    margin="normal"
+                >
+                    {Object.keys(sections).map((id) => (
+                        <MenuItem key={id} value={id}>
+                            {sections[id].name}
+                        </MenuItem>
+                    ))}
+                </TextField>
+                <TextField
+                    select
+                    fullWidth
+                    label="Секция"
+                    value={sectionId}
+                    onChange={(e) => setSectionId(e.target.value)}
+                    disabled={!divisionId}
+                    margin="normal"
+                >
+                    {divisionId &&
+                        Object.keys(sections[divisionId].subsections).map((secId) => (
+                            <MenuItem key={secId} value={secId}>
+                                {sections[divisionId].subsections[secId]}
+                            </MenuItem>
                         ))}
-                    </Select>
-                </Box>
-                <Box style={{ marginTop: '20px' }}>
-                    <InputLabel>Секция</InputLabel>
-                    <Select value={sectionId} onChange={(e) => setSectionId(e.target.value)}>
-                        {divisionId && Object.keys(sections[divisionId].subsections).map((sectionId) => (
-                            <MenuItem key={sectionId} value={sectionId}>{sections[divisionId].subsections[sectionId]}</MenuItem>
-                        ))}
-                    </Select>
-                </Box>
+                </TextField>
                 <Button variant="contained" color="primary" onClick={handleSave} ref={saveButtonRef} style={{ marginTop: '20px' }}>
                     Сохранить
                 </Button>

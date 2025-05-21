@@ -1,5 +1,6 @@
 package com.sgtu.tester.common.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sgtu.tester.util.ParametersConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,15 +26,14 @@ public class FormulaPattern {
 
     private Long sectionId;
 
-    @Lob
     private String formula;
 
-    @Lob
     @Convert(converter = ParametersConverter.class)
     private Map<String, Object> parameters;
 
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "formulas")
+    @JsonIgnore
     private Set<TestPattern> testPatterns = new HashSet<>();
 }

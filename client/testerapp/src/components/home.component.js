@@ -1,8 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { Table, TableBody, TableCell, TableContainer, TablePagination,TableHead, TableRow, Paper, MenuItem, FormControl, InputLabel} from '@mui/material';
-import UserService from "../services/auth/user.service";
-import { withRouter } from "../common/with-router";
-import { ContentDiv, CustomSelect } from "./global/mui.styles";
+import React, {useState} from "react";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow
+} from '@mui/material';
+import {withRouter} from "../common/with-router";
+import {ContentDiv, CustomSelect} from "./global/mui.styles";
 import Mathjax from "react-mathjax-component";
 
 const users = [

@@ -1,11 +1,12 @@
 import axios from 'axios';
 import API_URLS from '../common/urls';
 import authHeader from './auth/auth-header';
+import axiosInstance from "./auth/axiosInstance";
 
 const formulaService = {
     getAll: async () => {
         try {
-            const response = await axios.get(API_URLS.FORMULA, { headers: authHeader() });
+            const response = await axiosInstance.get(API_URLS.FORMULA, { headers: authHeader() });
             return response.data;
         } catch (error) {
             throw error;
@@ -14,11 +15,19 @@ const formulaService = {
 
     getById: async (id) => {
         try {
-            const response = await axios.get(`${API_URLS.FORMULA}/${id}`, { headers: authHeader() });
+            const response = await axiosInstance.get(`${API_URLS.FORMULA}/${id}`, { headers: authHeader() });
             return response.data;
         } catch (error) {
             throw error;
         }
+    },
+
+    getBySection: async (sectionId) => {
+        const response = await axiosInstance.get(`${API_URLS.FORMULA}/filter/section`, {
+            headers: authHeader(),
+            params: { sectionId }
+        });
+        return response.data;
     },
 
     create: async (formula) => {
@@ -28,7 +37,7 @@ const formulaService = {
                 ...authHeader()
             };
             console.log('Request headers:', headers);
-            const response = await axios.post(API_URLS.FORMULA, formula, { headers });
+            const response = await axiosInstance.post(API_URLS.FORMULA, formula, { headers });
             return response.data;
         } catch (error) {
             console.error('Error creating formula:', error);
@@ -38,7 +47,7 @@ const formulaService = {
 
     update: async (id, formula) => {
         try {
-            const response = await axios.put(`${API_URLS.FORMULA}/${id}`, formula, {
+            const response = await axiosInstance.put(`${API_URLS.FORMULA}/${id}`, formula, {
                 headers: {
                     'Content-Type': 'application/json',
                     ...authHeader()
@@ -52,7 +61,7 @@ const formulaService = {
 
     delete: async (id) => {
         try {
-            await axios.delete(`${API_URLS.FORMULA}/${id}`, { headers: authHeader() });
+            await axiosInstance.delete(`${API_URLS.FORMULA}/${id}`, { headers: authHeader() });
         } catch (error) {
             throw error;
         }

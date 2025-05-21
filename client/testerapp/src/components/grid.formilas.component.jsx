@@ -1,39 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { MenuItem, InputLabel, Box, FormControl, IconButton, Menu } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { withRouter } from "../common/with-router";
-import { sections, localeGridText } from '../common/consts';
-import { ContentDiv, CustomSelect } from './global/mui.styles';
-import { convertAsciiMathToLatex, renderMathInElement } from 'mathlive';
+import React, {useEffect, useState} from 'react';
+import {DataGrid, ruRU} from '@mui/x-data-grid';
+import {Box, FormControl, IconButton, InputLabel, MenuItem} from '@mui/material';
+import {useNavigate} from 'react-router-dom';
+import {withRouter} from "../common/with-router";
+import {localeGridText, sections} from '../common/consts';
+import {ContentDiv, CustomSelect} from './global/mui.styles';
+import {renderMathInElement} from 'mathlive';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { format } from 'date-fns';
+import {format} from 'date-fns';
 import formulaService from '../services/formula.service';
-
-const convertAsciiToLatex = (ascii) => {
-    let latex = convertAsciiMathToLatex(ascii);
-    latex = latex.replace(/#([a-zA-Z])/g, '\\mathbf{$1}');
-    return latex;
-};
-
-const FormulaCell = ({ formula }) => {
-    const latexFormula = convertAsciiToLatex(formula);
-    const divRef = React.useRef(null);
-
-    useEffect(() => {
-        if (divRef.current) {
-            renderMathInElement(divRef.current);
-        }
-    }, [latexFormula]);
-
-    return (
-        <div ref={divRef} className="latex-formula">
-            {`$$${latexFormula}$$`}
-        </div>
-    );
-};
+import {FormulaCell} from "../util/convert.formula";
 
 const columns = [
     { field: 'divisionId', headerName: 'Раздел', width: 150, valueGetter: (params) => sections[params.value].name },
@@ -92,14 +69,6 @@ const FormulasGrid = () => {
         setSelectedDivision('');
     };
 
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
-
     const handleRowSelection = (selectedRowIds) => {
         const updatedFormulas = formulas.map((formula) => ({
             ...formula,
@@ -108,14 +77,16 @@ const FormulasGrid = () => {
         setFormulas(updatedFormulas);
     };
 
-    const filteredFormulas = formulas.filter(formula => {
-        if (selectedSection) {
-            return formula.sectionId === selectedSection;
-        }
-        if (selectedDivision) {
-            return formula.divisionId === selectedDivision;
-        }
-        return true;
+    const filteredFormulas = formulas.filter((formula) => {
+        const matchesDivision = selectedDivision
+            ? String(formula.divisionId) === String(selectedDivision)
+            : true;
+
+        const matchesSection = selectedSection
+            ? String(formula.sectionId) === String(selectedSection)
+            : true;
+
+        return matchesDivision && matchesSection;
     });
 
     return (
@@ -156,27 +127,15 @@ const FormulasGrid = () => {
                     <IconButton color="primary" onClick={handleOpen}>
                         <AddIcon />
                     </IconButton>
-                    <IconButton color="primary" onClick={handleMenuOpen}>
-                        <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleMenuClose}
-                    >
-                        <MenuItem onClick={handleMenuClose}>Действие 1</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Действие 2</MenuItem>
-                        <MenuItem onClick={handleMenuClose}>Действие 3</MenuItem>
-                    </Menu>
                 </Box>
             </Box>
             <Box style={{ height: 600, width: '100%' }}>
                 <DataGrid
                     rows={filteredFormulas}
+                    localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
                     columns={columns}
                     pageSize={10}
                     rowsPerPageOptions={[10]}
-                    localeText={localeGridText}
                     checkboxSelection
                     onSelectionModelChange={(ids) => handleRowSelection(ids)}
                 />
