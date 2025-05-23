@@ -1,5 +1,6 @@
 package com.sgtu.tester.common.mvc.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +31,7 @@ public class TestInfo {
 
     private Long userId;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "testInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StudentTestInfo> studentTests = new ArrayList<>();
 }

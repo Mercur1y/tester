@@ -15,3 +15,14 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+
+  equation-processor:
+    build:
+      context: ./equation-processor
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBIT_HOST: rabbitmq
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+    restart: always

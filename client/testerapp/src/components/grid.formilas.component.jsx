@@ -3,7 +3,7 @@ import {DataGrid, ruRU} from '@mui/x-data-grid';
 import {Box, FormControl, IconButton, InputLabel, MenuItem} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import {withRouter} from "../common/with-router";
-import {localeGridText, sections} from '../common/consts';
+import {sections} from '../common/consts';
 import {ContentDiv, CustomSelect} from './global/mui.styles';
 import {renderMathInElement} from 'mathlive';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,34 +11,15 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import {format} from 'date-fns';
 import formulaService from '../services/formula.service';
 import {FormulaCell} from "../util/convert.formula";
-
-const columns = [
-    { field: 'divisionId', headerName: 'Раздел', width: 150, valueGetter: (params) => sections[params.value].name },
-    { field: 'sectionId', headerName: 'Секция', width: 150, valueGetter: (params) => {
-        const division = Object.values(sections).find(div => div.subsections[params.value]);
-        return division ? division.subsections[params.value] : '';
-    }},
-    { field: 'formula', headerName: 'Формула', width: 250, renderCell: (params) => <FormulaCell formula={params.value} /> },
-    { field: 'parameters', headerName: 'Переменные', width: 400, renderCell: (params) => (
-        <div>
-            {Object.entries(params.value).map(([variable, data]) => (
-                <div key={variable}>
-                    <strong>{variable}:</strong> {data.values.length ? data.values.join(', ') : `min: ${data.min}, max: ${data.max}, round: ${data.round}`}
-                </div>
-            ))}
-        </div>
-    ) },
-    { field: 'createdAt', headerName: 'Дата создания', width: 200, valueFormatter: (params) => {
-        return format(new Date(params.value), 'dd/MM/yyyy HH:mm:ss');
-    }},
-];
+import {DeleteOutlined} from "@mui/icons-material";
+import {useNotify} from "./global/nav.notifbar";
 
 const FormulasGrid = () => {
     const [formulas, setFormulas] = useState([]);
     const [selectedSection, setSelectedSection] = useState('');
     const [selectedDivision, setSelectedDivision] = useState('');
-    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
+    const notify = useNotify();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,6 +43,17 @@ const FormulasGrid = () => {
 
     const handleOpen = () => {
         navigate('/formulas/new');
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await formulaService.delete(id);
+            setFormulas(prev => prev.filter(p => p.id !== id));
+            notify('Шаблон успешно удалён', 'success');
+        } catch (error) {
+            console.error('Ошибка при удалении', error);
+            notify('Не удалось удалить шаблон', 'error');
+        }
     };
 
     const handleResetFilters = () => {
@@ -89,10 +81,59 @@ const FormulasGrid = () => {
         return matchesDivision && matchesSection;
     });
 
+    const columns = [
+        { field: 'divisionId', headerName: 'Раздел', width: 150, valueGetter: (params) => sections[params.value].name },
+        { field: 'sectionId', headerName: 'Секция', width: 150, valueGetter: (params) => {
+                const division = Object.values(sections).find(div => div.subsections[params.value]);
+                return division ? division.subsections[params.value] : '';
+            }},
+        { field: 'formula', headerName: 'Формула', width: 330, renderCell: (params) => <FormulaCell formula={params.value} /> },
+        {
+            field: 'parameters',
+            headerName: 'Переменные',
+            width: 400,
+            renderCell: (params) => (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexWrap: 'wrap',
+                        wordBreak: 'break-word',
+                        whiteSpace: 'normal',
+                        fontSize: 13,
+                        paddingY: 1,
+                    }}
+                >
+                    {Object.entries(params.value).map(([variable, data]) => (
+                        <Box key={variable}>
+                            <strong>{variable}</strong>: {data.values?.length
+                            ? data.values.join(', ')
+                            : `min: ${data.min}, max: ${data.max}${data.round !== undefined ? `, round: ${data.round}` : ''}`}
+                        </Box>
+                    ))}
+                </Box>
+            )
+        },
+        { field: 'createdAt', headerName: 'Дата создания', width: 200, valueFormatter: (params) => {
+                return format(new Date(params.value), 'dd/MM/yyyy HH:mm:ss');
+            }},
+        {
+            field: 'actions',
+            headerName: '',
+            width: 50,
+            sortable: false,
+            renderCell: ({ row }) => (
+                <IconButton color="error" size="small" onClick={() => handleDelete(row.id)}>
+                    <DeleteOutlined fontSize="small" />
+                </IconButton>
+            )
+        }
+    ];
+
     return (
         <ContentDiv>
             <Box style={{ marginBottom: 20, display: 'flex', alignItems: 'center' }}>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>
                     <InputLabel>Раздел</InputLabel>
                     <CustomSelect
                         fullWidth
@@ -107,7 +148,7 @@ const FormulasGrid = () => {
                         ))}
                     </CustomSelect>
                 </FormControl>
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                <FormControl variant="standard" sx={{ m: 1, minWidth: 200 }}>
                     <InputLabel>Секция</InputLabel>
                     <CustomSelect
                         fullWidth
@@ -138,6 +179,7 @@ const FormulasGrid = () => {
                     rowsPerPageOptions={[10]}
                     checkboxSelection
                     onSelectionModelChange={(ids) => handleRowSelection(ids)}
+                    getRowHeight={() => 'auto'}
                 />
             </Box>
         </ContentDiv>

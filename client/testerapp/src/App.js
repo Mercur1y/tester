@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Route, Routes, Navigate, useLocation} from 'react-router-dom';
+import {Navigate, Route, Routes, useLocation} from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import {CustomSidebar} from "./components/global/nav.sidebar";
@@ -9,14 +9,15 @@ import Home from "./components/home.component";
 import FormulasGrid from "./components/grid.formilas.component";
 import FormulasForm from './components/form.formulas.component';
 import Profile from "./components/auth/profile.component";
-import BoardUser from "./components/board-user.component";
-import BoardModerator from "./components/board-moderator.component";
-import BoardAdmin from "./components/board-admin.component";
 import CommonForm from "./components/auth/common-form.component";
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {TestPatternForm} from "./components/form.test-pattern.component";
 import {NotificationProvider} from "./components/global/nav.notifbar";
 import {TestPatternsGrid} from "./components/grid.test-pattern.component";
+import {LocalizationProvider} from "@mui/x-date-pickers";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {ruRU} from "@mui/x-date-pickers/locales";
+import {GroupsGrid} from "./components/grid.groups.component";
 
 // import AuthVerify from "./common/AuthVerify";
 
@@ -57,17 +58,15 @@ const App = () => {
     const routes = [
         {
             path: "/",
-            element: currentUser ? <Navigate to="/home" replace /> : <CommonForm />
+            element: currentUser ? <Navigate to="/home" replace/> : <CommonForm/>
         },
         {path: "/home", element: <Home/>, title: "Home"},
         {path: "/profile", element: <Profile/>, title: "Profile"},
-        {path: "/user", element: <BoardUser/>, title: "User Board"},
-        {path: "/mod", element: <BoardModerator/>, title: "Moderator Board"},
-        {path: "/admin", element: <BoardAdmin/>, title: "Admin Board"},
         {path: "/formulas", element: <FormulasGrid/>, title: "Формулы"},
         {path: "/formulas/new", element: <FormulasForm/>, title: "Формулы"},
         {path: "/tests/new", element: <TestPatternForm/>, title: "Тесты"},
         {path: "/tests", element: <TestPatternsGrid/>, title: "Тесты"},
+        {path: "/groups", element: <GroupsGrid/>, title: "Текущие группы"},
     ];
 
     return (
@@ -76,13 +75,15 @@ const App = () => {
                 {currentUser && <CustomSidebar/>}
                 <main className="content">
                     {currentUser && <Topbar currentUser={currentUser} logOut={logOut} currentTitle={currentTitle}/>}
-                    <NotificationProvider>
-                        <Routes>
-                            {routes.map((route, index) => (
-                                <Route key={index} path={route.path} element={route.element}/>
-                            ))}
-                        </Routes>
-                    </NotificationProvider>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru" localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}>
+                        <NotificationProvider>
+                            <Routes>
+                                {routes.map((route, index) => (
+                                    <Route key={index} path={route.path} element={route.element}/>
+                                ))}
+                            </Routes>
+                        </NotificationProvider>
+                    </LocalizationProvider>
                 </main>
             </div>
         </ThemeProvider>

@@ -26,14 +26,14 @@ public class TestPattern {
 
     private LocalDateTime updateDate;
 
-    @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany (fetch = FetchType.LAZY)
     @JoinTable(name = "test_questions",
             joinColumns = @JoinColumn(name = "test_id"),
             inverseJoinColumns = @JoinColumn(name = "question_id")
     )
     private Set<QuestionPattern> questions = new HashSet<>();
 
-    @ManyToMany (fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany (fetch = FetchType.LAZY)
     @JoinTable(name = "test_formulas",
             joinColumns = @JoinColumn(name = "test_id"),
             inverseJoinColumns = @JoinColumn(name = "formula_id")

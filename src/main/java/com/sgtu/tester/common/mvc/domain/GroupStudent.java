@@ -1,6 +1,7 @@
 package com.sgtu.tester.common.mvc.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sgtu.tester.security.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,23 +13,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentTestInfo {
+public class GroupStudent {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(columnDefinition = "text")
-    private String content;
-
-    private Integer rate;
-
-    private boolean isFinished  = false;
-
-    private String userId;
-
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "test_info_id", nullable = false)
-    private TestInfo testInfo;
+    @JoinColumn(name = "group_id")
+    private Group group;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
+

@@ -33,49 +33,45 @@ export const sections = {
     }
 };
 
-export const localeGridText = {
-    toolbarColumns: 'Управление столбцами',
-    toolbarFilters: 'Фильтры',
-    toolbarDensity: 'Плотность',
-    toolbarExport: 'Экспорт',
-    columnsPanelTextFieldLabel: 'Найти столбец',
-    columnsPanelTextFieldPlaceholder: 'Название столбца',
-    columnsPanelDragIconLabel: 'Перетащите столбец',
-    columnsPanelShowAllButton: 'Показать все',
-    columnsPanelHideAllButton: 'Скрыть все',
-    filterPanelAddFilter: 'Добавить фильтр',
-    filterPanelDeleteIconLabel: 'Удалить',
-    filterPanelLinkOperator: 'Логический оператор',
-    filterPanelOperators: 'Операторы',
-    filterPanelOperatorAnd: 'И',
-    filterPanelOperatorOr: 'ИЛИ',
-    filterPanelColumns: 'Столбцы',
-    filterPanelInputLabel: 'Значение',
-    filterPanelInputPlaceholder: 'Значение фильтра',
-    filterOperatorContains: 'содержит',
-    filterOperatorEquals: 'равно',
-    filterOperatorStartsWith: 'начинается с',
-    filterOperatorEndsWith: 'заканчивается на',
-    filterOperatorIs: 'является',
-    filterOperatorNot: 'не является',
-    filterOperatorAfter: 'после',
-    filterOperatorOnOrAfter: 'не ранее',
-    filterOperatorBefore: 'до',
-    filterOperatorOnOrBefore: 'не позднее',
-    filterOperatorIsEmpty: 'пусто',
-    filterOperatorIsNotEmpty: 'не пусто',
-    filterOperatorIsAnyOf: 'любой из',
-    columnMenuLabel: 'Меню',
-    columnMenuShowColumns: 'Показать столбцы',
-    columnMenuFilter: 'Фильтр',
-    columnMenuHideColumn: 'Скрыть',
-    columnMenuUnsort: 'Убрать сортировку',
-    columnMenuSortAsc: 'Сортировать по возрастанию',
-    columnMenuSortDesc: 'Сортировать по убыванию',
-    columnHeaderFiltersTooltipActive: count => `${count} активных фильтров`,
-    columnHeaderFiltersLabel: 'Показать фильтры',
-    columnHeaderSortIconLabel: 'Сортировать',
-    footerRowSelected: count => `${count.toLocaleString()} строк выбрано`,
-    footerTotalRows: 'Всего строк:',
-    footerTotalVisibleRows: (visibleCount, totalCount) => `${visibleCount.toLocaleString()} из ${totalCount.toLocaleString()}`,
+export const groups = {
+    1: {
+        name: 'Информационные системы и технологии',
+        course: 1,
+        code: '09.03.02'
+    },
+    2: {
+        name: 'Информационная безопасность автоматизированных систем',
+        course: 2,
+        code: '10.05.01'
+    },
+    3: {
+        name: 'Фундаментальная информатика и информационные технологии',
+        course: 3,
+        code: '02.03.02'
+    },
+    4: {
+        name: 'Прикладная математика и информатика',
+        course: 4,
+        code: '01.03.02'
+    },
+    5: {
+        name: 'Экономика',
+        course: 1,
+        code: '38.03.01'
+    },
+    6: {
+        name: 'Прикладная механика',
+        course: 2,
+        code: '15.03.03'
+    },
+    7: {
+        name: 'Юриспруденция',
+        course: 3,
+        code: '40.03.01'
+    },
+    8: {
+        name: 'Государственное и муниципальное управление',
+        course: 4,
+        code: '38.03.04'
+    }
 };

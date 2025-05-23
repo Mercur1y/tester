@@ -3,38 +3,52 @@ package com.sgtu.tester.common.consts;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.sgtu.tester.rabbit.RabbitConfig.*;
+
 @Getter
 @RequiredArgsConstructor
 public enum Subsection {
-    ALGEBRA_GROUP_SIMILAR("11", "Группировать подобные члены"),
-    ALGEBRA_FIND_VARIABLE("12", "Найти переменную"),
-    ALGEBRA_MULTIPLIER("13", "Множитель"),
-    ALGEBRA_DECOMPOSE("14", "Разложить"),
-    ALGEBRA_FRACTION_CALCULATIONS("15", "Вычисления с дробями"),
-    ALGEBRA_LINEAR_EQUATIONS("16", "Линейные уравнения"),
-    ALGEBRA_QUADRATIC_EQUATIONS("17", "Квадратные уравнения"),
-    ALGEBRA_INEQUALITIES("18", "Неравенства"),
-    ALGEBRA_SYSTEM_OF_EQUATIONS("19", "Системы уравнений"),
-    ALGEBRA_MATRICES("110", "Матрицы"),
+    // Алгебра
+    ALGEBRA_GROUP_SIMILAR(11L, "Группировать подобные члены", null),
+    ALGEBRA_FIND_VARIABLE(12L, "Найти переменную", null),
+    ALGEBRA_MULTIPLIER(13L, "Множитель", null),
+    ALGEBRA_DECOMPOSE(14L, "Разложить", null),
+    ALGEBRA_FRACTION_CALCULATIONS(15L, "Вычисления с дробями", null),
+    ALGEBRA_LINEAR_EQUATIONS(16L, "Линейные уравнения", null),
+    ALGEBRA_QUADRATIC_EQUATIONS(17L, "Квадратные уравнения", null),
+    ALGEBRA_INEQUALITIES(18L, "Неравенства", null),
+    ALGEBRA_SYSTEM_OF_EQUATIONS(19L, "Системы уравнений", null),
+    ALGEBRA_MATRICES(110L, "Матрицы", null),
 
-    TRIGONOMETRY_SIMPLIFY_EQUATION("21", "Сократить уравнение"),
-    TRIGONOMETRY_FIND_NUMERICAL_VALUE("22", "Найти численное значение"),
-    TRIGONOMETRY_GRAPHS("23", "Графики"),
-    TRIGONOMETRY_SOLVE_EQUATIONS("24", "Решить уравнения"),
+    // Тригонометрия
+    TRIGONOMETRY_SIMPLIFY_EQUATION(21L, "Сократить уравнение", ROUTING_KEY_SIMPLIFICATION_REQUEST),
+    TRIGONOMETRY_FIND_NUMERICAL_VALUE(22L, "Найти численное значение", null),
+    TRIGONOMETRY_GRAPHS(23L, "Графики", null),
+    TRIGONOMETRY_SOLVE_EQUATIONS(24L, "Решить уравнения", null),
 
-    CALCULUS_DERIVATIVES("31", "Производные"),
-    CALCULUS_INTEGRALS("32", "Интегралы"),
-    CALCULUS_LIMITS("33", "Пределы функции");
+    // Математический анализ
+    CALCULUS_DERIVATIVES(31L, "Производные", ROUTING_KEY_EQUATION_DIFFERENTIAL_REQUEST),
+    CALCULUS_INTEGRALS(32L, "Интегралы", ROUTING_KEY_EQUATION_INTEGRAL_REQUEST),
+    CALCULUS_LIMITS(33L, "Пределы функции", null);
 
-    private final String id;
-    private final String name;
+    private final Long id;
+    private final String title;
+    private final String routingKey;
 
-    public static Subsection fromId(String id) {
-        for (Subsection subsection : values()) {
-            if (subsection.id.equals(id)) {
-                return subsection;
-            }
+    private static final Map<Long, Subsection> BY_ID = new HashMap<>();
+
+    static {
+        for (Subsection s : values()) {
+            BY_ID.put(s.id, s);
         }
-        throw new IllegalArgumentException("No subsection with id " + id);
+    }
+
+    public static Optional<Subsection> fromId(Long id) {
+        return Optional.ofNullable(BY_ID.get(id));
     }
 }
+

@@ -26,6 +26,7 @@ public class FormulaPattern {
 
     private Long sectionId;
 
+    @Column(columnDefinition = "text")
     private String formula;
 
     @Convert(converter = ParametersConverter.class)
