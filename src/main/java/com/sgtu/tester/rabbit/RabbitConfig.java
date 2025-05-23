@@ -34,8 +34,11 @@ public class RabbitConfig {
     // Exchange для получения решения
     public static final String EXCHANGE_EQUATION_RESPONSE = "ru.ex.equation.response";
 
+    public static final String EXCHANGE_EXPRESSION_CHECK_RESPONSE = "ru.ex.expression.check.response";
+
     // Унифицированная очередь для получения ответа
     public static final String QUEUE_EQUATION_RESPONSE = "ru.qu.equation.response";
+    public static final String QUEUE_EXPRESSION_CHECK_RESPONSE = "ru.qu.expression.check.response";
 
     // Производная
     public static final String ROUTING_KEY_EQUATION_DIFFERENTIAL_REQUEST = "ru.key.equation.differential.request";
@@ -48,6 +51,10 @@ public class RabbitConfig {
     // Упрощение выражения
     public static final String ROUTING_KEY_SIMPLIFICATION_REQUEST = "ru.key.simplification.request";
     public static final String QUEUE_SIMPLIFICATION_REQUEST = "ru.qu.simplification.request";
+
+    // Проверка
+    public static final String ROUTING_KEY_EXPRESSION_CHECK = "ru.key.expression.check";
+    public static final String QUEUE_EXPRESSION_CHECK = "ru.qu.expression.check";
 
     @Bean
     public CachingConnectionFactory rabbitConnectionFactory() {

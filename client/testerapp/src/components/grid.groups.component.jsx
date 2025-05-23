@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {DataGrid, ruRU} from '@mui/x-data-grid';
-import {Box, Button, Paper} from '@mui/material';
+import {Box, IconButton, Paper} from '@mui/material';
 import groupService from '../services/group.service';
 import {GroupStudentsModal} from "./modal/modal.group.students";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export const GroupsGrid = () => {
     const [groups, setGroups] = useState([]);
@@ -22,12 +23,15 @@ export const GroupsGrid = () => {
             headerName: '',
             width: 200,
             renderCell: ({ row }) => (
-                <Button onClick={() => {
-                    setSelectedGroup(row);
-                    setStudentsModalOpen(true);
-                }}>
-                    Просмотреть список
-                </Button>
+                <IconButton
+                    color="primary"
+                    onClick={() => {
+                        setSelectedGroup(row);
+                        setStudentsModalOpen(true);
+                    }}
+                >
+                    <VisibilityIcon />
+                </IconButton>
             )
         }
     ];

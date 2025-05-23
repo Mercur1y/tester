@@ -5,7 +5,6 @@ import "./App.css";
 import {CustomSidebar} from "./components/global/nav.sidebar";
 import Topbar from "./components/global/nav.topbar";
 import AuthService from "./services/auth/auth.service";
-import Home from "./components/home.component";
 import FormulasGrid from "./components/grid.formilas.component";
 import FormulasForm from './components/form.formulas.component';
 import Profile from "./components/auth/profile.component";
@@ -18,6 +17,9 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {ruRU} from "@mui/x-date-pickers/locales";
 import {GroupsGrid} from "./components/grid.groups.component";
+import {TestAssignmentsGrid} from "./components/grid.test.assignments";
+import {StudentTestList} from "./components/grid.student.test";
+import {StudentTestSolve} from "./components/form.student.test.solve";
 
 // import AuthVerify from "./common/AuthVerify";
 
@@ -60,19 +62,29 @@ const App = () => {
             path: "/",
             element: currentUser ? <Navigate to="/home" replace/> : <CommonForm/>
         },
-        {path: "/home", element: <Home/>, title: "Home"},
+        {
+            path: "/home",
+            element: currentUser
+                ? currentUser.roles.includes("ROLE_MODERATOR")
+                    ? <Navigate to="/groups" replace />
+                    : <Navigate to="/student/tests" replace />
+                : <CommonForm />
+        },
         {path: "/profile", element: <Profile/>, title: "Profile"},
         {path: "/formulas", element: <FormulasGrid/>, title: "Формулы"},
         {path: "/formulas/new", element: <FormulasForm/>, title: "Формулы"},
         {path: "/tests/new", element: <TestPatternForm/>, title: "Тесты"},
         {path: "/tests", element: <TestPatternsGrid/>, title: "Тесты"},
         {path: "/groups", element: <GroupsGrid/>, title: "Текущие группы"},
+        {path: "/assignments", element: <TestAssignmentsGrid/>, title: "Назначенные тесты"},
+        {path: "/student/tests", element: <StudentTestList/>, title: "Мои тесты"},
+        { path: "/student/tests/:id/solve", element: <StudentTestSolve />, title: "Решение теста" },
     ];
 
     return (
         <ThemeProvider theme={theme}>
             <div className="app">
-                {currentUser && <CustomSidebar/>}
+                {currentUser && <CustomSidebar roles={currentUser.roles} />}
                 <main className="content">
                     {currentUser && <Topbar currentUser={currentUser} logOut={logOut} currentTitle={currentTitle}/>}
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru" localeText={ruRU.components.MuiLocalizationProvider.defaultProps.localeText}>

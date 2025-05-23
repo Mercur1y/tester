@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, IconButton, Button, Dialog, DialogActions, DialogContent, DialogContentText, Typography } from '@mui/material';
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import LogoutIcon from '@mui/icons-material/Logout';
+import {useNavigate} from "react-router-dom";
 
 /**
  * @param {Object} props Свойства компонента:
@@ -12,6 +13,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
  */
 const Topbar = ({ currentUser, logOut, currentTitle }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
@@ -32,7 +34,7 @@ const Topbar = ({ currentUser, logOut, currentTitle }) => {
       <Box display="flex"></Box>
       {/* ICONS */}
       <Box display="flex" justifyContent="flex-end">
-        <IconButton sx={{ mr: 2 }}>
+        <IconButton sx={{ mr: 2 }} onClick={() => navigate("/profile")}>
           <PersonOutlinedIcon />
           <Typography variant="button" sx={{ textTransform: 'lowercase', ml: 0.5 }}>{currentUser.username}</Typography>
         </IconButton>
